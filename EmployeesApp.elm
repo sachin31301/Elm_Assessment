@@ -86,7 +86,7 @@ update msg model =
             handleShowSeniors model
 
 
--- ✅ Refactored helper functions
+
 
 handleGotEmployees : Result Http.Error (List Employee) -> Model -> ( Model, Cmd Msg )
 handleGotEmployees result model =
@@ -106,7 +106,7 @@ handleShowSeniors model =
     ( { model | seniors = seniorList }, Cmd.none )
 
 
--- ✅ Helper for business logic
+
 
 getSeniors : RemoteData -> List Employee
 getSeniors employees =
