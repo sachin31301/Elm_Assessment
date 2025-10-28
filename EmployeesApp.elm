@@ -86,8 +86,6 @@ update msg model =
             handleShowSeniors model
 
 
-
-
 handleGotEmployees : Result Http.Error (List Employee) -> Model -> ( Model, Cmd Msg )
 handleGotEmployees result model =
     case result of
@@ -104,8 +102,6 @@ handleShowSeniors model =
         seniorList = getSeniors model.employees
     in
     ( { model | seniors = seniorList }, Cmd.none )
-
-
 
 
 getSeniors : RemoteData -> List Employee
@@ -181,31 +177,35 @@ view model =
                         ]
                     , tbody [] (List.map showEmployee employees)
                     ]
-
-        , if not (List.isEmpty model.seniors) then
-            div []
-                [ h2 [ style "margin-top" "40px" ] [ text "Senior Employees" ]
-                , table
-                    [ style "border-collapse" "collapse"
-                    , style "margin" "auto"
-                    , style "width" "70%"
-                    , style "border" "1px solid #ccc"
-                    ]
-                    [ thead []
-                        [ tr []
-                            [ th headerCellStyle [ text "ID" ]
-                            , th headerCellStyle [ text "Name" ]
-                            , th headerCellStyle [ text "Age" ]
-                            , th headerCellStyle [ text "Role" ]
-                            , th headerCellStyle [ text "Salary" ]
-                            ]
-                        ]
-                    , tbody [] (List.map showEmployee model.seniors)
-                    ]
-                ]
-          else
-            text ""
+        , viewSeniors model.seniors
         ]
+
+
+viewSeniors : List Employee -> Html Msg
+viewSeniors seniors =
+    if List.isEmpty seniors then
+        text ""
+    else
+        div []
+            [ h2 [ style "margin-top" "40px" ] [ text "Senior Employees" ]
+            , table
+                [ style "border-collapse" "collapse"
+                , style "margin" "auto"
+                , style "width" "70%"
+                , style "border" "1px solid #ccc"
+                ]
+                [ thead []
+                    [ tr []
+                        [ th headerCellStyle [ text "ID" ]
+                        , th headerCellStyle [ text "Name" ]
+                        , th headerCellStyle [ text "Age" ]
+                        , th headerCellStyle [ text "Role" ]
+                        , th headerCellStyle [ text "Salary" ]
+                        ]
+                    ]
+                , tbody [] (List.map showEmployee seniors)
+                ]
+            ]
 
 
 showEmployee : Employee -> Html Msg
