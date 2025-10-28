@@ -1,7 +1,5 @@
 module Distribution exposing (..)
 
-
-
 import Browser
 import Html exposing (Html, div, input, text, button, ul, li)
 import Html.Attributes exposing (..)
@@ -9,7 +7,7 @@ import Html.Events exposing (onClick, onInput)
 import String
 
 
-
+-- MODEL
 
 type alias Model =
     { input : String
@@ -38,25 +36,51 @@ update msg model =
             { model | input = newInput }
 
         GenerateDistribution ->
-            case String.toInt model.input of
-                Just n ->
-                    if n >= 1 && n <= 100 then
-                        let
-                            dist = distributeFruits n
-                        in
-                        { model | distribution = dist }
-                    else
-                        { model | distribution = [] }
+            let
+                dist = validateAndDistribute model.input
+            in
+            { model | distribution = dist }
 
-                Nothing ->
-                    { model | distribution = [] }
+
+-- VALIDATION + LOGIC WRAPPER
+
+validateAndDistribute : String -> List Int
+validateAndDistribute inputStr =
+    case String.toInt inputStr of
+        Just n ->
+            if n >= 1 && n <= 100 then
+                distributeFruits n
+            else
+                []
+        Nothing ->
+            []
+
+
+-- CORE LOGIC
+
+distributeFruits : Int -> List Int
+distributeFruits total =
+    let
+        base = total // 7
+        remainder = modBy 7 total
+        days = List.range 1 7
+    in
+        List.map (\day -> distributionForDay day base remainder) days
+
+
+distributionForDay : Int -> Int -> Int -> Int
+distributionForDay day base remainder =
+    if day <= remainder then
+        base + 1
+    else
+        base
 
 
 -- VIEW
 
 view : Model -> Html Msg
 view model =
-    div [ style "text-align" "center", style "margin" "20px"]
+    div [ style "text-align" "center", style "margin" "20px" ]
         [ input
             [ placeholder "Enter number of fruits"
             , value model.input
@@ -68,26 +92,6 @@ view model =
         , ul [] (List.map (\n -> li [] [ text (String.fromInt n) ]) model.distribution)
         ]
 
-
--- LOGIC
-
-distributeFruits : Int -> List Int
-distributeFruits total =
-    let
-        base = total // 7
-        remainder = modBy 7 total
-
-        days = List.range 1 7
-
-    in
-        List.map (\day -> distributionForDay day base remainder) days
-
-distributionForDay day base remainder = 
-                        if day <= remainder then
-                          base +1 
-                        else
-                             base
-    
 
 -- MAIN
 
