@@ -6,9 +6,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import String
 
-
--- MODEL
-
 type alias Model =
     { input : String
     , distribution : List Int
@@ -21,8 +18,6 @@ init =
     , distribution = []
     }
 
-
--- UPDATE
 
 type Msg
     = InputChanged String
@@ -42,7 +37,6 @@ update msg model =
             { model | distribution = dist }
 
 
--- VALIDATION + LOGIC WRAPPER
 
 validateAndDistribute : String -> List Int
 validateAndDistribute inputStr =
@@ -56,7 +50,7 @@ validateAndDistribute inputStr =
             []
 
 
--- CORE LOGIC
+
 
 distributeFruits : Int -> List Int
 distributeFruits total =
@@ -76,7 +70,7 @@ distributionForDay day base remainder =
         base
 
 
--- VIEW
+
 
 view : Model -> Html Msg
 view model =
@@ -93,7 +87,7 @@ view model =
         ]
 
 
--- MAIN
+
 
 main : Program () Model Msg
 main =
